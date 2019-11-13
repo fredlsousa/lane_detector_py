@@ -2,8 +2,8 @@ import cv2
 import numpy as np
 
 
-def bird_view(frame, crop_frame):
-    image_h, image_w, _ = frame.shape
+def bird_view(crop_frame):
+    image_h, image_w, _ = crop_frame
     src = np.float32([[0, image_h], [1207, image_h], [0, 0], [image_w, 0]])
     dst = np.float32([[568, image_h], [711, image_h], [0, 0], [image_w, 0]])
     M = cv2.getPerspectiveTransform(src, dst)
@@ -12,7 +12,7 @@ def bird_view(frame, crop_frame):
 
 
 def cam_module():
-    cap = cv2.VideoCapture("video_1.avi")
+    cap = cv2.VideoCapture(0)
     # out = cv2.VideoWriter('video.avi', cv2.VideoWriter_fourcc(*"H264"), 30, (1280, 960))
 
     while cap.isOpened():
@@ -28,7 +28,7 @@ def cam_module():
         # cv2.imshow("gauss", median)
         normalized_img = median
         cv2.normalize(median, normalized_img, 0, 255, cv2.NORM_MINMAX)
-        warp = bird_view(frame, normalized_img)
+        warp = bird_view(normalized_img)
         cv2.imshow("warp", warp)
         # cv2.imshow("norm", normalized_img)
         low_threshold = 50
